@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>AudioTrip Importer</title>
+  <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+
+  <style>
+    @font-face {
+      font-family: 'Neuropolitical';
+      font-style: normal;
+      font-weight: 400;
+      src: url('./assets/neuropolitical.ttf') format('truetype');
+    }
+
+    :root {
+      --at-background-light: #6b2ca8;
+    }
+
+    body {
+      background-color: #222;
+      color: black;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+
+      font-family: 'Neuropolitical', arial;
+      line-height: 1.5em;
+
+      overflow-x: hidden;
+      overflow-y: hidden;
+
+      text-align: center;
+      font-size: large;
+    }
+
+    #dropZone {
+      background-color: var(--at-background-light);
+      height: 300px;
+      
+    }
+
+    .centeredList {
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+
+    .centered {
+      display:flex;
+      justify-content:center;
+      line-height: 2em; 
+      align-items:center
+    }
+
+    #about {
+      color: #888
+    }
+
+    #about a {
+      color: #bbb
+    }
+
+  </style>
+
+  <script type='text/javascript'>
+
+    window.onload = function () {
+      var ipc = require('electron').ipcRenderer
+      var holder = document.getElementById('dropZone');
+
+
+      holder.ondragover = () => {
+        return false;
+      };
+
+      holder.ondragleave = () => {
+        return false;
+      };
+
+      holder.ondragend = () => {
+        return false;
+      };
+
+      holder.ondrop = (e) => {
+        e.preventDefault();
+
+        for (let f of e.dataTransfer.files) {
+          ipc.once('actionReply', function (event, response) {
+            alert(response)
+          })
+          ipc.send('onFile', f.path)
+        }
+
+        return false;
+      };
+    }
+
+  </script>
+</head>
+
+<body>
+
+  <div id="dropZone" class="centered">
+    <div>
+      
+      <h2>Drag a .ogg file here</h2>
+      <img src="./assets/icons8-double-down-96.png"></img>
+      <p>This will automatically place it into your game.</p>
+    </div>
+  </div>
+
+  <div id="about">    
+    <p><u>ABOUT</u><br/>
+    Icons by <a href=https://icons8.com/>icons8.com</a> | <a href=https://github.com/Blogshot/audiotrip-importer/>GitHub</a></p>
+  </div>
+
+</body>
+
+</html>

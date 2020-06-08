@@ -35,12 +35,33 @@
 
       text-align: center;
       font-size: large;
+
+      user-select: none;
+    }
+
+    #quest {
+      position: absolute;
+      left: 90%;
+      top: 10%;
+      width: 5%;
+      background-color: red;
+      border-radius: 15px;
+    }
+
+    #pc {
+      position: absolute;
+      left: 90%;
+      top: 20%;
+      width: 5%;
+      background-color: red;
+      border-radius: 15px;
+      font-size: medium;
     }
 
     #dropZone {
       background-color: var(--at-background-light);
       height: 300px;
-      
+      display: flow-root;
     }
 
     .centeredList {
@@ -51,10 +72,10 @@
     }
 
     .centered {
-      display:flex;
-      justify-content:center;
-      line-height: 2em; 
-      align-items:center
+      display: flex;
+      justify-content: center;
+      line-height: 2em;
+      align-items: center
     }
 
     #about {
@@ -65,6 +86,42 @@
       color: #bbb
     }
 
+    .lds-ripple {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 55px;
+    }
+
+    .lds-ripple div {
+      position: absolute;
+      border: 4px solid #fff;
+      opacity: 1;
+      border-radius: 50%;
+      animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+    }
+
+    .lds-ripple div:nth-child(2) {
+      animation-delay: -0.5s;
+    }
+
+    @keyframes lds-ripple {
+      0% {
+        top: 36px;
+        left: 36px;
+        width: 0;
+        height: 0;
+        opacity: 1;
+      }
+
+      100% {
+        top: 0px;
+        left: 0px;
+        width: 72px;
+        height: 72px;
+        opacity: 0;
+      }
+    }
   </style>
 
   <script type='text/javascript'>
@@ -89,12 +146,16 @@
       holder.ondrop = (e) => {
         e.preventDefault();
 
+        var array = new Array()
+
         for (let f of e.dataTransfer.files) {
-          ipc.once('actionReply', function (event, response) {
-            alert(response)
-          })
-          ipc.send('onFile', f.path)
+          array.push(f.path)
         }
+
+        ipc.once('actionReply', function (event, response) {
+          alert(response)
+        })
+        ipc.send('onFile', array)
 
         return false;
       };
@@ -105,18 +166,31 @@
 
 <body>
 
+  <div id="quest">
+    <img style="width: 100%; vertical-align: middle" src="./assets/quest.png">
+  </div>
+
+  <div id="pc">
+    PC
+  </div>
+
   <div id="dropZone" class="centered">
-    <div>
-      
-      <h2>Drag a .ogg file here</h2>
-      <img src="./assets/icons8-double-down-96.png"></img>
+    <h2>Drop .ats or .ogg here</h2>
+      <img id="dropLogo" src="./assets/icons8-double-down-96.png"></img></br>
+      <div id="spinner" style="display: none;" class="centered lds-ripple">
+        <div></div>
+        <div></div>
+      </div>
       <p>This will automatically place it into your game.</p>
     </div>
   </div>
 
-  <div id="about">    
-    <p><u>ABOUT</u><br/>
-    Icons by <a href=https://icons8.com/>icons8.com</a> | <a href=https://github.com/Blogshot/audiotrip-importer/>GitHub</a></p>
+
+
+  <div id="about">
+    <p><u>ABOUT</u><br />
+      Icons by <a href=https://icons8.com />icons8.com</a> | <a
+        href=https://github.com/Blogshot/audiotrip-importer />GitHub</a></p>
   </div>
 
 </body>

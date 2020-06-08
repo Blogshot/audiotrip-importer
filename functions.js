@@ -1,4 +1,6 @@
 const fs = require('fs')
+require('log-timestamp');
+
 
 // make available globally
 var locationPC = process.env.LOCALAPPDATA + "Low\\Kinemotik Studios\\Audio Trip\\Songs\\"
@@ -10,97 +12,46 @@ var quest = false
 
 module.exports = {
 
-  entrypoint: async function entrypoint(filePath, callback) {
+  entrypoint: async function entrypoint(filePath) {
 
-    var fileName = filePath.substr(filePath.lastIndexOf("\\") + 1)
-    
-    // support only dropping an .ogg file
-    if (fileName.endsWith(".ogg") || fileName.endsWith(".ats")) {
+    return new Promise((resolve, reject) => {
 
-      await this.deployToGame(filePath.substr(0, filePath.lastIndexOf("\\") + 1), fileName)
+      var fileName = filePath.substr(filePath.lastIndexOf("\\") + 1)
 
-      callback({
-        "result": true, "message": "The song was successfully imported.\nYou can find the files at:" +
-          "\n" + (pc ? "- " + locationPC : "") +
-          "\n" + (quest ? "- Your Quest" : "")
-      })
-    }
+      // support only dropping an .ogg file
+      if (fileName.endsWith(".ogg") || fileName.endsWith(".ats") || fileName.endsWith(".test")) {
 
-    callback({
-      "result": false, "message": "File is not of type .ogg"
+        console.log("File is valid. Deploying...")
+
+        this.deployToGame(filePath.substr(0, filePath.lastIndexOf("\\") + 1), fileName).then(() => {
+          resolve(fileName + " successfully imported.")
+        }).catch(error => {
+          reject("Error when processing " + fileName + " : " + error)
+        })
+      } else {
+        resolve(fileName + ": File is not of type '.ogg' or '.ats'")
+      }
     })
   },
 
   deployToGame: async function deployToGame(path, file) {
-
-    // check if Quest is connected
-    quest = await this.questIsConnected()
 
     // write  audio file and generated song into custom song location
     if (pc) {
       fs.copyFileSync(path + file, locationPC + file)
     }
 
+    var adbWrapper = require('./adb.js')
+
+    // check if Quest is connected
+    console.log("Check for Quest")
+    quest = await adbWrapper.questIsConnected()
+
     if (quest) {
-      await this.copyToQuest(quest[0], quest[1], path + file)
+      console.log("Transferring file")
+      await adbWrapper.copyToQuest(quest[0], quest[1], path + file)
+      console.log("Files transferred")
     }
-  },
-
-  questIsConnected: async function questIsConnected() {
-    
-    return new Promise((resolve, reject) => {
-      var adb = require('adbkit')
-      var client = adb.createClient( { bin: ".\\adb.exe" })
-
-      client.listDevices().then(devices => {
-
-        if (devices.length == 0) {
-          console.log("No devices connected!")
-          resolve(false)
-        }
-
-        for (var index in devices) {
-
-          var id = devices[index].id
-
-          client.getProperties(id).then(props => {
-            var model = props["ro.product.model"]
-
-            if (model == "Quest") {
-              resolve([client, id])
-            }
-          })
-        }
-      })
-    })
-  },
-
-  copyToQuest: async function copyToQuest(client, id, filePath) {
-
-    return new Promise((resolve, reject) => {
-
-      client.getProperties(id).then(props => {
-
-        var model = props["ro.product.model"]
-
-        if (model == "Quest") {
-
-          client.syncService(id).then(sync => {
-
-            var fileName = filePath.substr(filePath.lastIndexOf("\\") + 1)
-            var transfer = sync.pushFile(filePath, '/sdcard/Android/data/com.KinemotikStudios.AudioTripQuest/files/Songs/' + fileName)
-
-            transfer.on('end', () => {
-              resolve(true)
-            })
-            transfer.on('error', error => {
-              console.error(error)
-              resolve(false)
-            })
-          })
-        }
-      })
-    })
-  },
+  }
 }
 

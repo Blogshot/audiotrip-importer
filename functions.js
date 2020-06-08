@@ -19,7 +19,7 @@ module.exports = {
       var fileName = filePath.substr(filePath.lastIndexOf("\\") + 1)
 
       // support only dropping an .ogg file
-      if (fileName.endsWith(".ogg") || fileName.endsWith(".ats") || fileName.endsWith(".test")) {
+      if (fileName.endsWith(".ogg") || fileName.endsWith(".ats")) {
 
         console.log("File is valid. Deploying...")
 

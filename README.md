@@ -7,8 +7,8 @@ This tool aims to provide an easy to use way to import .ogg audio files into Aud
 You will need to enable developer mode for this to work.
 * Open the Oculus app on your iOS or Android phone. 
 * In the Settings menu, select your Oculus headset
-* Select *More Settings* -> *Developer Options*. 
-* Toggle *Developer Mode* on.
+* Select *More Settings* -> *Developer Mode*. 
+* Toggle Developer Mode on.
 * The Oculus Quest needs to be connected to the PC.
 
 ![OculusAppDevModeSteps](https://github.com/Blogshot/audiotrip-importer/blob/master/OculusAppDevModeSteps.png)

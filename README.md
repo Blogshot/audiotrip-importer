@@ -4,17 +4,10 @@ This tool aims to provide an easy to use way to import .ogg audio files into Aud
 ![defaultView](https://github.com/Blogshot/audiotrip-importer/blob/master/defaultView.png)
 
 # Requirements
-You will need to enable developer mode for this to work.
-* Open the Oculus app on your iOS or Android phone. 
-* In the Settings menu, select your Oculus headset
-* Select *More Settings* -> *Developer Mode*. 
-* Toggle Developer Mode on.
-* The Oculus Quest needs to be connected to the PC.
-
-![OculusAppDevModeSteps](https://github.com/Blogshot/audiotrip-importer/blob/master/OculusAppDevModeSteps.png)
+* When connecting to the PC, confirm the *File Access* request inside the Quest
 
 ## Installation
 Download the latest [release](https://github.com/Blogshot/audiotrip-importer/releases) and install.
 
 ## Usage
-Drag'n'Drop `.ats` or `.ogg` files into the app to make them available in AudioTrip.
+Drag'n'Drop `.ats` or `.ogg` files into the designated area.

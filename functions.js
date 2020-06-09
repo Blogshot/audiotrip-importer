@@ -12,46 +12,31 @@ var quest = false
 
 module.exports = {
 
-  entrypoint: async function entrypoint(filePath) {
+  entrypoint: function entrypoint(filePath) {
 
-    return new Promise((resolve, reject) => {
-
-      var fileName = filePath.substr(filePath.lastIndexOf("\\") + 1)
+    var fileName = filePath.substr(filePath.lastIndexOf("\\") + 1)
 
       // support only dropping an .ogg file
       if (fileName.endsWith(".ogg") || fileName.endsWith(".ats")) {
 
         console.log("File is valid. Deploying...")
 
-        this.deployToGame(filePath.substr(0, filePath.lastIndexOf("\\") + 1), fileName).then(() => {
-          resolve(fileName + " successfully imported.")
-        }).catch(error => {
-          reject("Error when processing " + fileName + " : " + error)
-        })
-      } else {
-        resolve(fileName + ": File is not of type '.ogg' or '.ats'")
+        this.deployToGame(filePath.substr(0, filePath.lastIndexOf("\\") + 1), fileName)
       }
-    })
   },
 
-  deployToGame: async function deployToGame(path, file) {
+  deployToGame: function deployToGame(path, file) {
 
     // write  audio file and generated song into custom song location
     if (pc) {
       fs.copyFileSync(path + file, locationPC + file)
     }
 
-    var adbWrapper = require('./adb.js')
+    var questWrapper = require('./questWrapper')
 
-    // check if Quest is connected
-    console.log("Check for Quest")
-    quest = await adbWrapper.questIsConnected()
-
-    if (quest) {
-      console.log("Transferring file")
-      await adbWrapper.copyToQuest(quest[0], quest[1], path + file)
-      console.log("Files transferred")
-    }
+    questWrapper.questIsConnected().then( data => {
+      questWrapper.copyToQuest(path, file)
+    })
   }
 }
 

@@ -22,26 +22,21 @@ function createWindow() {
 
   win.loadFile('index.html')
 
+  setInterval(function () {
 
-  // start the server
-  var adb = require('./adb.js')
-  adb.getClient()
+    var questWrapper = require('./questWrapper')
 
-  setInterval(async function () {
-    var quest = await adb.questIsConnected()
-
-    if (quest) {
+    questWrapper.questIsConnected().then(data => {
       win.webContents.executeJavaScript(`document.getElementById('quest').style.backgroundColor = "green";`)
-    } else {
+    }).catch(error => {
+      console.log("Quest is not connected")
       win.webContents.executeJavaScript(`document.getElementById('quest').style.backgroundColor = "red";`)
-    }
+    })
+
   }, 2000)
 
-
-  // make available globally
-  var locationPC = process.env.LOCALAPPDATA + "Low\\Kinemotik Studios\\Audio Trip\\Songs\\"
-
   // check if PC version is installed
+  var locationPC = process.env.LOCALAPPDATA + "Low\\Kinemotik Studios\\Audio Trip\\Songs\\"
   var pc = fs.existsSync(locationPC)
 
   if (pc) {
@@ -53,28 +48,15 @@ function createWindow() {
 
 var ipc = require('electron').ipcMain;
 
-ipc.on('onFile', async function (event, data) {
+ipc.on('onFile', function (event, data) {
 
-  win.webContents.executeJavaScript(`document.getElementById("dropLogo").style.display = "none";`)
-  win.webContents.executeJavaScript(`document.getElementById("spinner").style.removeProperty('display');`)
-
-  var results = new Array()
+  setLoading(true)
 
   for (var elem in data) {
-
-    console.log("Processing " + data[elem])
-
-    results.push(
-      await importer.entrypoint(data[elem], event)
-    )
-
+    importer.entrypoint(data[elem], event)
   }
 
-  console.log("Results are here!")
-  win.webContents.executeJavaScript(`document.getElementById("spinner").style.display = "none";`)
-  win.webContents.executeJavaScript(`document.getElementById("dropLogo").style.removeProperty('display');`)
-  event.sender.send('actionReply', "Results:\n" + results.join("\n"))
-
+  setLoading(false)
 });
 
 app.whenReady().then(createWindow)
@@ -82,9 +64,6 @@ app.whenReady().then(createWindow)
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-
-    // kill adb before exiting
-    require('adbkit').createClient({ bin: ".\\adb.exe" }).kill()
     app.quit()
   }
 })
@@ -94,3 +73,14 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+function setLoading(bool) {
+
+  if (bool) {
+    win.webContents.executeJavaScript(`document.getElementById("dropLogo").style.display = "none";`)
+    win.webContents.executeJavaScript(`document.getElementById("spinner").style.removeProperty('display');`)
+  } else {
+    win.webContents.executeJavaScript(`document.getElementById("spinner").style.display = "none";`)
+    win.webContents.executeJavaScript(`document.getElementById("dropLogo").style.removeProperty('display');`)
+  }
+}

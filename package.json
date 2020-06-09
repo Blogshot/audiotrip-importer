@@ -1,12 +1,13 @@
 {
   "name": "audiotrip-importer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "",
   "main": "main.js",
   "dependencies": {
     "adbkit": "^2.11.1",
     "arraylist": "^0.1.0",
-    "log-timestamp": "^0.3.0"
+    "log-timestamp": "^0.3.0",
+    "node-powershell": "^4.0.0"
   },
   "devDependencies": {
     "electron": "^8.2.5",
@@ -23,9 +24,7 @@
   "build": {
     "appId": "audiotrip-importer",
     "extraFiles": [
-      "adb.exe",
-      "AdbWinApi.dll",
-      "AdbWinUsbApi.dll"
+      "copyViaMTP.ps1"
     ],
     "productName": "AudioTrip-Importer"
   }

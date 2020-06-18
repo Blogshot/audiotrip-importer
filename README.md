@@ -1,13 +1,13 @@
 # Trip-Importer
-This tool aims to provide an easy to use way to import .ogg audio files into AudioTrip to make them available for the in-game choreographer.
+This tool aims to provide an easy to use way to import audio- as well as `.ats`-files into AudioTrip to make them available for the in-game choreographer.
 
 ![defaultView](https://github.com/Blogshot/audiotrip-importer/blob/master/defaultView.png)
 
-# Requirements
-* When connecting to the PC, confirm the *File Access* request inside the Quest
+## Requirements for Oculus Quest
+* When connecting the Quest to the PC, click *Allow* on the *File Access* request inside the Quest.
 
 ## Installation
-Download the latest [release](https://github.com/Blogshot/audiotrip-importer/releases) and install.
+Download the latest [release](https://github.com/Blogshot/audiotrip-importer/releases/latest) and install.
 
 ## Usage
-Drag'n'Drop `.ats` or `.ogg` files into the designated area.
+Drag'n'Drop `.ogg`, `.mp3` or `.ats` files into the designated area.

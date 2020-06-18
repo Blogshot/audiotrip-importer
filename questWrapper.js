@@ -10,9 +10,9 @@ module.exports = {
       exec('((New-Object -com Shell.Application).NameSpace(0x11).items() | where { $_.name -eq "Quest" }).Path', { 'shell': 'powershell.exe' }, (error, stdout, stderr) => {
         
         if (!stderr && !error && stdout) {
-          resolve(stdout)
+          resolve("Quest is connected")
         } else {
-          reject("PowerShell stderr: " + stderr)
+          reject("Quest is not connected")
         }
       })
     })

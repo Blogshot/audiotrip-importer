@@ -27,9 +27,10 @@ function createWindow() {
     var questWrapper = require('./questWrapper')
 
     questWrapper.questIsConnected().then(data => {
+      console.log("Debug: " + data)
       win.webContents.executeJavaScript(`document.getElementById('quest').style.backgroundColor = "green";`)
     }).catch(error => {
-      console.log("Quest is not connected")
+      console.log("Error: " + error)
       win.webContents.executeJavaScript(`document.getElementById('quest').style.backgroundColor = "red";`)
     })
 
@@ -53,7 +54,11 @@ ipc.on('onFile', function (event, data) {
   setLoading(true)
 
   for (var elem in data) {
-    importer.entrypoint(data[elem], event)
+    importer.entrypoint(data[elem], function (error) {
+
+      // callback is only for error messages
+      event.sender.send('actionReply', error);
+    })
   }
 
   setLoading(false)

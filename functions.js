@@ -12,7 +12,7 @@ var quest = false
 
 module.exports = {
 
-  entrypoint: function entrypoint(filePath) {
+  entrypoint: function entrypoint(filePath, callback) {
 
     var fileName = filePath.substr(filePath.lastIndexOf("\\") + 1)
 
@@ -22,6 +22,9 @@ module.exports = {
         console.log("File is valid. Deploying...")
 
         this.deployToGame(filePath.substr(0, filePath.lastIndexOf("\\") + 1), fileName)
+        
+      } else {
+        callback("The file type of '" + fileName + "' not valid.")
       }
   },
 

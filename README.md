@@ -1,5 +1,5 @@
 # Trip-Importer
-This tool aims to provide an easy to use way to import audio- as well as `.ats`-files into AudioTrip to make them available for the in-game choreographer.
+This tool aims to provide an easy to use way to import audio (`.ogg`) as well as `.ats`-files into AudioTrip to make them available for the in-game choreographer.
 
 ![defaultView](https://github.com/Blogshot/audiotrip-importer/blob/master/defaultView.png)
 
@@ -10,4 +10,4 @@ This tool aims to provide an easy to use way to import audio- as well as `.ats`-
 Download the latest [release](https://github.com/Blogshot/audiotrip-importer/releases/latest) and install.
 
 ## Usage
-Drag'n'Drop `.ogg`, `.mp3` or `.ats` files into the designated area.
+Drag'n'Drop `.ogg`, or `.ats` files into the designated area.
